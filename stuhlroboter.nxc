@@ -1,0 +1,198 @@
+#define POWER 30
+
+int kalibrierungSW();
+long kalibrierung90();
+void Drive(int time);
+void DriveToLineEnd(int LineColor);
+void turnToColor(int LineColor, int color, int timeTurn90);
+void turn(int color, int timeTurn90);
+
+
+task main() {
+
+     int color = 0;
+
+     SetSensorColorFull(IN_1);
+     SetSensorLowspeed(IN_2);
+     SetSensorLight(IN_3);
+     color = Sensor(IN_1);
+     int timeTurn90 = kalibrierung90();
+     Drive(100);
+     int LineColor = kalibrierungSW();
+
+     PlaySound(SOUND_DOUBLE_BEEP);
+     
+     //Linienende
+     DriveToLineEnd(LineColor);
+     //Vorfahren zur Mitte
+     Drive(1200);
+     //Zur Farbe drehen
+     turnToColor(LineColor, color, timeTurn90);
+     //Liniefahren
+     DriveToLineEnd(LineColor);
+     turn(color, timeTurn90);
+     DriveToLineEnd(LineColor);
+
+}
+
+int kalibrierungSW(void)
+	//Funktion zur Ermittlung des Schwarzwertes
+	//der Linienkante durch Berechnung des Durch-
+	//schnittes aus Minimal-(schwarz) und Maximalwert(weiﬂ)
+	//Funktion hat eigene "POWER" (=50)
+	//die auf "Dreh-Zeit" (600/1200) abgestimmt ist.
+{
+	long end_time;
+	long t0 = CurrentTick();
+	int iDurchschnitt;
+	int imin = 999;
+	int imax = -1;
+	int iHelligkeitKal=0;
+	ClearScreen();
+	// Kalibrierung nach links
+	TextOut(5,LCD_LINE1, "KALIBRIERUNG LINKS");
+  //Motor nach links starten
+	OnFwd(OUT_B, 50);
+	OnRev(OUT_A, 50);
+	while (CurrentTick()-t0 < 990) {
+		iHelligkeitKal = Sensor(IN_3);
+		if (iHelligkeitKal > imax) {
+			imax = iHelligkeitKal;
+		} else if (iHelligkeitKal < imin) {
+			imin = iHelligkeitKal;
+		}
+	}
+	// Kalibrierung nach rechts
+	TextOut(5,LCD_LINE2, "KALIBRIERUNG RECHTS");
+	end_time = CurrentTick() + 1200;
+	OnFwd(OUT_A, 50);
+	OnRev(OUT_B, 50);
+	while (CurrentTick() < end_time) {
+		iHelligkeitKal = Sensor(IN_3);
+		if (iHelligkeitKal > imax) {
+			imax = iHelligkeitKal;
+		} else if (iHelligkeitKal < imin) {
+			imin = iHelligkeitKal;
+		}
+	}
+
+	//Durchschnitt ausrechnen und anzeigen
+	iDurchschnitt = (imin+imax)/2;
+	ClearLine(LCD_LINE3);
+	TextOut(4,LCD_LINE3, "SW Linienkante:");
+	NumOut(65, LCD_LINE3, iDurchschnitt);
+
+	//Kalibrierung abgeschlossen, Linienkante finden
+	TextOut(4,LCD_LINE3, "KALIBRIERUNG ABGESCHLOSSEN");
+	while (Sensor(IN_3) > iDurchschnitt) {
+		OnFwd(OUT_B, 50);
+		OnRev(OUT_A, 50);
+	}
+	Off(OUT_AB);
+	return iDurchschnitt;
+}
+
+long kalibrierung90()
+	//Funktion zur Ermittlung der Zeit,
+	//die f¸r eine 90Grad-Drehung benˆtigt wird
+{
+	ClearScreen();
+	TextOut(5,LCD_LINE1, "KALIBR. LƒUFT");
+	int iHelligkeitkal=0;
+	long t0kal=CurrentTick(), turntime180=0;
+
+	//drehen bis Linie wieder gefunden ist
+  OnFwd(OUT_A,POWER);
+	OnRev(OUT_B,POWER);
+	Wait(300);
+  do{
+	iHelligkeitkal=Sensor(IN_3);
+	}while(iHelligkeitkal>=50)
+
+	TextOut(5,LCD_LINE2, "LINIE GEFUNDEN");
+
+
+	//Benˆtigte Zeit f¸r die 180Grad Drehung berechnen
+	turntime180=CurrentTick()-t0kal;
+
+	//zur¸ckdrehen auf die Linie
+  OnFwd(OUT_B,POWER);
+	OnRev(OUT_A,POWER);
+	Wait(300);
+  do{
+	iHelligkeitkal=Sensor(IN_3);
+	}while(iHelligkeitkal>=50)
+	TextOut(5,LCD_LINE3, "KALIBR. ABGESCHLOSSEN");
+	return turntime180/2;
+}
+
+void Drive(int time)
+{
+ OnFwd(OUT_AB, POWER);
+ Wait(time);
+ Off(OUT_AB);
+}
+
+void DriveToLineEnd(int LineColor)
+{
+     //Gerade ausfahren bis Linienende
+     while(1)
+     {
+             if(Sensor(IN_3)  <= LineColor)
+             {
+              OnFwd(OUT_A,POWER);
+    	        OnFwd(OUT_B,POWER) ;
+    	       }
+    	       else
+            {
+                 //Links
+                  OnFwd(OUT_B,POWER);
+	                OnRev(OUT_A,POWER);
+	                Wait(120);
+                  Off(OUT_AB);
+	                //‹berpr¸fung
+	                if(Sensor(IN_3) > LineColor)
+                  {
+                           //Rechts
+                           OnFwd(OUT_A,POWER);
+	                         OnRev(OUT_B,POWER);
+	                         Wait(240);
+	                         Off(OUT_AB);
+                           if(Sensor(IN_3) > LineColor) {
+                                //Links
+                                OnFwd(OUT_B,POWER);
+	                              OnRev(OUT_A,POWER);
+	                              Wait(120);
+	                              Off(OUT_AB);
+	                              break;
+                           }
+   	              }
+            }
+     }
+}
+
+void turnToColor(int LineColor, int color, int timeTurn90) {
+     switch(color) {
+         //Schwarz
+         case 1: {
+             //Rechtsdrehung
+             OnFwd(OUT_A,POWER);
+             OnRev(OUT_B,POWER);
+             Wait(timeTurn90);
+             Off(OUT_AB);
+         }
+     }
+}
+
+void turn(int color, int timeTurn90) {
+    switch(color) {
+        case 1: {
+             Drive(400);
+             //Linksdrehung
+             OnFwd(OUT_B,POWER);
+             OnRev(OUT_A,POWER);
+             Wait(timeTurn90);
+             Off(OUT_AB);
+        }
+    }
+}
