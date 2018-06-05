@@ -38,7 +38,7 @@ task main() {
 int kalibrierungSW(void)
 	//Funktion zur Ermittlung des Schwarzwertes
 	//der Linienkante durch Berechnung des Durch-
-	//schnittes aus Minimal-(schwarz) und Maximalwert(weiß)
+	//schnittes aus Minimal-(schwarz) und Maximalwert(weiÃŸ)
 	//Funktion hat eigene "POWER" (=50)
 	//die auf "Dreh-Zeit" (600/1200) abgestimmt ist.
 {
@@ -94,10 +94,10 @@ int kalibrierungSW(void)
 
 long kalibrierung90()
 	//Funktion zur Ermittlung der Zeit,
-	//die für eine 90Grad-Drehung benötigt wird
+	//die fÃ¼r eine 90Grad-Drehung benÃ¶tigt wird
 {
 	ClearScreen();
-	TextOut(5,LCD_LINE1, "KALIBR. LÄUFT");
+	TextOut(5,LCD_LINE1, "KALIBR. LÃ„UFT");
 	int iHelligkeitkal=0;
 	long t0kal=CurrentTick(), turntime180=0;
 
@@ -112,10 +112,10 @@ long kalibrierung90()
 	TextOut(5,LCD_LINE2, "LINIE GEFUNDEN");
 
 
-	//Benötigte Zeit für die 180Grad Drehung berechnen
+	//BenÃ¶tigte Zeit fÃ¼r die 180Grad Drehung berechnen
 	turntime180=CurrentTick()-t0kal;
 
-	//zurückdrehen auf die Linie
+	//zurÃ¼ckdrehen auf die Linie
   OnFwd(OUT_B,POWER);
 	OnRev(OUT_A,POWER);
 	Wait(300);
@@ -150,7 +150,7 @@ void DriveToLineEnd(int LineColor)
 	                OnRev(OUT_A,POWER);
 	                Wait(120);
                   Off(OUT_AB);
-	                //Überprüfung
+	                //ÃœberprÃ¼fung
 	                if(Sensor(IN_3) > LineColor)
                   {
                            //Rechts
