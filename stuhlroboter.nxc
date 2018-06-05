@@ -1,6 +1,9 @@
 #define POWER 30
 
 void sensorenInitialisieren();
+void startVorgang();
+void bedienungsanleitungAnzeigen();
+void aufTastendruckWarten();
 void Drive(int time);
 void DriveToLineEnd(int LineColor);
 void turnToColor(int LineColor, int color, int timeTurn90);
@@ -11,8 +14,7 @@ long kalibrierung90();
 task main() {
 
 	sensorenInitialisieren();
-
-     
+ 
 	 int color = Sensor(IN_1);
      int timeTurn90 = kalibrierung90();
      Drive(100);
@@ -38,6 +40,28 @@ void sensorenInitialisieren() {
 	SetSensorLowspeed(IN_2);
 	SetSensorLight(IN_3);
 	SetSensorTouch(IN_4);
+}
+
+//TODO: complete
+void startVorgang() {
+	bedienungsanleitungAnzeigen();
+
+	aufTastendruckWarten();
+
+	//Konsole löschen
+	ClearScreen();
+}
+
+void bedienungsanleitungAnzeigen() {
+	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
+}
+
+void aufTastendruckWarten() {
+	while(true) {
+		if(Sensor(IN_4) == 1) {
+			break;
+		}
+	}
 }
 
 void Drive(int time)
