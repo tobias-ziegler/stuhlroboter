@@ -1,21 +1,19 @@
 #define POWER 30
 
-int kalibrierungSW();
-long kalibrierung90();
+void sensorenInitialisieren();
 void Drive(int time);
 void DriveToLineEnd(int LineColor);
 void turnToColor(int LineColor, int color, int timeTurn90);
 void turn(int color, int timeTurn90);
-
+int kalibrierungSW();
+long kalibrierung90();
 
 task main() {
 
-     int color = 0;
+	sensorenInitialisieren();
 
-     SetSensorColorFull(IN_1);
-     SetSensorLowspeed(IN_2);
-     SetSensorLight(IN_3);
-     color = Sensor(IN_1);
+     
+	 int color = Sensor(IN_1);
      int timeTurn90 = kalibrierung90();
      Drive(100);
      int LineColor = kalibrierungSW();
@@ -33,6 +31,84 @@ task main() {
      turn(color, timeTurn90);
      DriveToLineEnd(LineColor);
 
+}
+
+void sensorenInitialisieren() {
+	SetSensorColorFull(IN_1);
+	SetSensorLowspeed(IN_2);
+	SetSensorLight(IN_3);
+	SetSensorTouch(IN_4);
+}
+
+void Drive(int time)
+{
+ OnFwd(OUT_AB, POWER);
+ Wait(time);
+ Off(OUT_AB);
+}
+
+void DriveToLineEnd(int LineColor)
+{
+     //Gerade ausfahren bis Linienende
+     while(1)
+     {
+             if(Sensor(IN_3)  <= LineColor)
+             {
+              OnFwd(OUT_A,POWER);
+    	        OnFwd(OUT_B,POWER) ;
+    	       }
+    	       else
+            {
+                 //Links
+                  OnFwd(OUT_B,POWER);
+	                OnRev(OUT_A,POWER);
+	                Wait(120);
+                  Off(OUT_AB);
+	                //Überprüfung
+	                if(Sensor(IN_3) > LineColor)
+                  {
+                           //Rechts
+                           OnFwd(OUT_A,POWER);
+	                         OnRev(OUT_B,POWER);
+	                         Wait(240);
+	                         Off(OUT_AB);
+                           if(Sensor(IN_3) > LineColor) {
+                                //Links
+                                OnFwd(OUT_B,POWER);
+	                              OnRev(OUT_A,POWER);
+	                              Wait(120);
+	                              Off(OUT_AB);
+	                              break;
+                           }
+   	              }
+            }
+     }
+}
+
+void turnToColor(int LineColor, int color, int timeTurn90) {
+     switch(color) {
+         //Schwarz
+         case 1: {
+             //Rechtsdrehung
+             OnFwd(OUT_A,POWER);
+             OnRev(OUT_B,POWER);
+             Wait(timeTurn90);
+             Off(OUT_AB);
+         }
+     }
+}
+
+void turn(int color, int timeTurn90) {
+    switch(color) {
+        case 1: {
+             Drive(400);
+             //Linksdrehung
+             OnFwd(OUT_B,POWER);
+             OnRev(OUT_A,POWER);
+             Wait(timeTurn90);
+             Off(OUT_AB);
+        }
+    }
 }
 
 int kalibrierungSW(void)
@@ -124,75 +200,4 @@ long kalibrierung90()
 	}while(iHelligkeitkal>=50)
 	TextOut(5,LCD_LINE3, "KALIBR. ABGESCHLOSSEN");
 	return turntime180/2;
-}
-
-void Drive(int time)
-{
- OnFwd(OUT_AB, POWER);
- Wait(time);
- Off(OUT_AB);
-}
-
-void DriveToLineEnd(int LineColor)
-{
-     //Gerade ausfahren bis Linienende
-     while(1)
-     {
-             if(Sensor(IN_3)  <= LineColor)
-             {
-              OnFwd(OUT_A,POWER);
-    	        OnFwd(OUT_B,POWER) ;
-    	       }
-    	       else
-            {
-                 //Links
-                  OnFwd(OUT_B,POWER);
-	                OnRev(OUT_A,POWER);
-	                Wait(120);
-                  Off(OUT_AB);
-	                //Überprüfung
-	                if(Sensor(IN_3) > LineColor)
-                  {
-                           //Rechts
-                           OnFwd(OUT_A,POWER);
-	                         OnRev(OUT_B,POWER);
-	                         Wait(240);
-	                         Off(OUT_AB);
-                           if(Sensor(IN_3) > LineColor) {
-                                //Links
-                                OnFwd(OUT_B,POWER);
-	                              OnRev(OUT_A,POWER);
-	                              Wait(120);
-	                              Off(OUT_AB);
-	                              break;
-                           }
-   	              }
-            }
-     }
-}
-
-void turnToColor(int LineColor, int color, int timeTurn90) {
-     switch(color) {
-         //Schwarz
-         case 1: {
-             //Rechtsdrehung
-             OnFwd(OUT_A,POWER);
-             OnRev(OUT_B,POWER);
-             Wait(timeTurn90);
-             Off(OUT_AB);
-         }
-     }
-}
-
-void turn(int color, int timeTurn90) {
-    switch(color) {
-        case 1: {
-             Drive(400);
-             //Linksdrehung
-             OnFwd(OUT_B,POWER);
-             OnRev(OUT_A,POWER);
-             Wait(timeTurn90);
-             Off(OUT_AB);
-        }
-    }
 }
