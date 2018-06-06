@@ -19,8 +19,6 @@ task main() {
      int timeTurn90 = kalibrierung90();
      Drive(100);
      int LineColor = kalibrierungSW();
-
-     PlaySound(SOUND_DOUBLE_BEEP);
      
      //Linienende
      DriveToLineEnd(LineColor);
@@ -42,14 +40,13 @@ void sensorenInitialisieren() {
 	SetSensorTouch(IN_4);
 }
 
-//TODO: complete
 void startVorgang() {
 	bedienungsanleitungAnzeigen();
-
 	aufTastendruckWarten();
-
 	//Konsole löschen
 	ClearScreen();
+	//Ton ausgeben
+	PlaySound(SOUND_DOUBLE_BEEP);
 }
 
 void bedienungsanleitungAnzeigen() {
