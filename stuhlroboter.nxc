@@ -4,6 +4,7 @@ void sensorenInitialisieren();
 void startVorgang();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
+int farbeEinlesen();
 void Drive(int time);
 void DriveToLineEnd(int LineColor);
 void turnToColor(int LineColor, int color, int timeTurn90);
@@ -13,9 +14,13 @@ long kalibrierung90();
 
 task main() {
 
+	int stuhlFarbe;
+
 	sensorenInitialisieren();
- 
-	 int color = Sensor(IN_1);
+	startVorgang();
+	stuhlFarbe = farbeEinlesen();
+	Wait(2000);
+
      int timeTurn90 = kalibrierung90();
      Drive(100);
      int LineColor = kalibrierungSW();
@@ -59,6 +64,10 @@ void aufTastendruckWarten() {
 			break;
 		}
 	}
+}
+
+int farbeEinlesen() {
+	return Sensor(IN_1);
 }
 
 void Drive(int time)
