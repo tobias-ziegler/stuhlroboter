@@ -5,8 +5,9 @@ void startVorgang();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
 int farbeEinlesen();
+void linienVerfolgung(int linienFarbton);
+
 void Drive(int time);
-void DriveToLineEnd(int LineColor);
 void turnToColor(int LineColor, int color, int timeTurn90);
 void turn(int color, int timeTurn90);
 int kalibrierungSW();
@@ -30,10 +31,9 @@ task main() {
 	Wait(2000);
 
 	//Sortiervorgang
-
+	//Linienverfolgung-Anfang
+	linienVerfolgung();
      
-     //Linienende
-     DriveToLineEnd(LineColor);
      //Vorfahren zur Mitte
      Drive(1200);
      //Zur Farbe drehen
@@ -77,49 +77,41 @@ int farbeEinlesen() {
 	return Sensor(IN_1);
 }
 
+void linienVerfolgung() {
+	while(true) {
+		if(Sensor(IN_3)  <= LineColor) {
+			OnFwd(OUT_AB,POWER);
+		} else {
+			//Links
+			OnFwd(OUT_B,POWER);
+			OnRev(OUT_A,POWER);
+			Wait(120);
+			Off(OUT_AB);
+			//Überprüfung
+			if(Sensor(IN_3) > LineColor) {
+				//Rechts
+				OnFwd(OUT_A,POWER);
+				OnRev(OUT_B,POWER);
+				Wait(240);
+				Off(OUT_AB);
+				if(Sensor(IN_3) > LineColor) {
+						//Links
+						OnFwd(OUT_B,POWER);
+						OnRev(OUT_A,POWER);
+						Wait(120);
+						Off(OUT_AB);
+						break;
+				}
+			}
+		}
+	}
+}
+
 void Drive(int time)
 {
  OnFwd(OUT_AB, POWER);
  Wait(time);
  Off(OUT_AB);
-}
-
-void DriveToLineEnd(int LineColor)
-{
-     //Gerade ausfahren bis Linienende
-     while(1)
-     {
-             if(Sensor(IN_3)  <= LineColor)
-             {
-              OnFwd(OUT_A,POWER);
-    	        OnFwd(OUT_B,POWER) ;
-    	       }
-    	       else
-            {
-                 //Links
-                  OnFwd(OUT_B,POWER);
-	                OnRev(OUT_A,POWER);
-	                Wait(120);
-                  Off(OUT_AB);
-	                //Überprüfung
-	                if(Sensor(IN_3) > LineColor)
-                  {
-                           //Rechts
-                           OnFwd(OUT_A,POWER);
-	                         OnRev(OUT_B,POWER);
-	                         Wait(240);
-	                         Off(OUT_AB);
-                           if(Sensor(IN_3) > LineColor) {
-                                //Links
-                                OnFwd(OUT_B,POWER);
-	                              OnRev(OUT_A,POWER);
-	                              Wait(120);
-	                              Off(OUT_AB);
-	                              break;
-                           }
-   	              }
-            }
-     }
 }
 
 void turnToColor(int LineColor, int color, int timeTurn90) {
