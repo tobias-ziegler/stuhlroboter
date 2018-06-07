@@ -1,4 +1,6 @@
 #define POWER 30
+#define LINIENVERFOLGUNG_DREHUNG_LINKS 120
+#define LINIENVERFOLGUNG_DREHUNG_RECHTS 240
 
 void sensorenInitialisieren();
 void startVorgang();
@@ -6,6 +8,8 @@ void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
 int farbeEinlesen();
 void linienVerfolgung(int linienFarbton);
+void linksDrehung(int zeitspanne);
+void rechtsDrehung(int zeitspanne);
 
 void Drive(int time);
 void turnToColor(int LineColor, int color, int timeTurn90);
@@ -77,34 +81,40 @@ int farbeEinlesen() {
 	return Sensor(IN_1);
 }
 
+//TODO: tidy up and display error
 void linienVerfolgung() {
 	while(true) {
 		if(Sensor(IN_3)  <= LineColor) {
 			OnFwd(OUT_AB,POWER);
 		} else {
 			//Links
-			OnFwd(OUT_B,POWER);
-			OnRev(OUT_A,POWER);
-			Wait(120);
-			Off(OUT_AB);
+			linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
 			//Überprüfung
 			if(Sensor(IN_3) > LineColor) {
 				//Rechts
-				OnFwd(OUT_A,POWER);
-				OnRev(OUT_B,POWER);
-				Wait(240);
-				Off(OUT_AB);
+				rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
 				if(Sensor(IN_3) > LineColor) {
-						//Links
-						OnFwd(OUT_B,POWER);
-						OnRev(OUT_A,POWER);
-						Wait(120);
-						Off(OUT_AB);
-						break;
+					//Links
+					linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
+					break;
 				}
 			}
 		}
 	}
+}
+
+void linksDrehung(int zeitspanne) {
+	OnFwd(OUT_B,POWER);
+	OnRev(OUT_A,POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
+}
+
+void rechtsDrehung(int zeitspanne) {
+	OnFwd(OUT_A,POWER);
+	OnRev(OUT_B,POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
 }
 
 void Drive(int time)
