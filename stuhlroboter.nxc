@@ -14,16 +14,23 @@ long kalibrierung90();
 
 task main() {
 
+	int zeitFuer90GradDrehung;
+	//Drive(100);
+	int linienFarbton;
 	int stuhlFarbe;
 
+	//Kalibrierung
+	zeitFuer90GradDrehung = kalibrierung90();
+	linienFarbton = kalibrierungSW();
+
+	//Start
 	sensorenInitialisieren();
 	startVorgang();
 	stuhlFarbe = farbeEinlesen();
 	Wait(2000);
 
-     int timeTurn90 = kalibrierung90();
-     Drive(100);
-     int LineColor = kalibrierungSW();
+	//Sortiervorgang
+
      
      //Linienende
      DriveToLineEnd(LineColor);
