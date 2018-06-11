@@ -10,8 +10,8 @@ void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
+void zuFarbeDrehen(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 
-void turnToColor(int LineColor, int color, int timeTurn90);
 void turn(int color, int timeTurn90);
 int kalibrierungSW();
 long kalibrierung90();
@@ -32,6 +32,7 @@ task main() {
 	startVorgang();
 	//Farbe einlesen
 	stuhlFarbe = Sensor(IN_1);
+	//2 Sekunden warten
 	Wait(2000);
 
 	//Sortiervorgang
@@ -39,8 +40,8 @@ task main() {
 	linienVerfolgung();
     //Vorfahren zur Mitte
     Drive(1200);
-     //Zur Farbe drehen
-     turnToColor(LineColor, color, timeTurn90);
+    //Zur Farbe drehen
+    turnToColor(LineColor, color, timeTurn90);
      //Liniefahren
      DriveToLineEnd(LineColor);
      turn(color, timeTurn90);
@@ -118,17 +119,12 @@ void geradeAusFahren(int zeitspanne) {
 	Off(OUT_AB);
 }
 
-void turnToColor(int LineColor, int color, int timeTurn90) {
-     switch(color) {
-         //Schwarz
-         case 1: {
-             //Rechtsdrehung
-             OnFwd(OUT_A,POWER);
-             OnRev(OUT_B,POWER);
-             Wait(timeTurn90);
-             Off(OUT_AB);
-         }
-     }
+//TODO: Andere Farben ergänzen
+void zuFarbeDrehen(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
+	switch(stuhlFarbe) {
+		case INPUT_BLACKCOLOR:
+			rechtsDrehung(zeitFuer90GradDrehung);
+	}
 }
 
 void turn(int color, int timeTurn90) {
