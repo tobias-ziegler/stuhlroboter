@@ -9,8 +9,8 @@ void aufTastendruckWarten();
 void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
+void geradeAusFahren(int zeitspanne);
 
-void Drive(int time);
 void turnToColor(int LineColor, int color, int timeTurn90);
 void turn(int color, int timeTurn90);
 int kalibrierungSW();
@@ -30,15 +30,15 @@ task main() {
 	//Start
 	sensorenInitialisieren();
 	startVorgang();
+	//Farbe einlesen
 	stuhlFarbe = Sensor(IN_1);
 	Wait(2000);
 
 	//Sortiervorgang
 	//Linienverfolgung-Anfang
 	linienVerfolgung();
-     
-     //Vorfahren zur Mitte
-     Drive(1200);
+    //Vorfahren zur Mitte
+    Drive(1200);
      //Zur Farbe drehen
      turnToColor(LineColor, color, timeTurn90);
      //Liniefahren
@@ -112,11 +112,10 @@ void rechtsDrehung(int zeitspanne) {
 	Off(OUT_AB);
 }
 
-void Drive(int time)
-{
- OnFwd(OUT_AB, POWER);
- Wait(time);
- Off(OUT_AB);
+void geradeAusFahren(int zeitspanne) {
+	OnFwd(OUT_AB, POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
 }
 
 void turnToColor(int LineColor, int color, int timeTurn90) {
