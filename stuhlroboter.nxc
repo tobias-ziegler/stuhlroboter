@@ -6,7 +6,6 @@ void sensorenInitialisieren();
 void startVorgang();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
-int farbeEinlesen();
 void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
@@ -31,7 +30,7 @@ task main() {
 	//Start
 	sensorenInitialisieren();
 	startVorgang();
-	stuhlFarbe = farbeEinlesen();
+	stuhlFarbe = Sensor(IN_1);
 	Wait(2000);
 
 	//Sortiervorgang
@@ -77,23 +76,19 @@ void aufTastendruckWarten() {
 	}
 }
 
-int farbeEinlesen() {
-	return Sensor(IN_1);
-}
-
 //TODO: tidy up and display error
-void linienVerfolgung() {
+void linienVerfolgung(int linienFarbton) {
 	while(true) {
-		if(Sensor(IN_3)  <= LineColor) {
+		if(Sensor(IN_3)  <= linienFarbton) {
 			OnFwd(OUT_AB,POWER);
 		} else {
 			//Links
 			linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
 			//Überprüfung
-			if(Sensor(IN_3) > LineColor) {
+			if(Sensor(IN_3) > linienFarbton) {
 				//Rechts
 				rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
-				if(Sensor(IN_3) > LineColor) {
+				if(Sensor(IN_3) > linienFarbton) {
 					//Links
 					linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
 					break;
