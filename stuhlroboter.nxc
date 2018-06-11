@@ -33,6 +33,7 @@ task main() {
 	sensorenInitialisieren();
 	startVorgang();
 	//Farbe einlesen
+	//TODO: Add color validity check
 	stuhlFarbe = Sensor(IN_1);
 	//2 Sekunden warten
 	Wait(2000);
@@ -123,11 +124,16 @@ void geradeAusFahren(int zeitspanne) {
 	Off(OUT_AB);
 }
 
-//TODO: Andere Farben ergänzen
 void zuFarbeDrehen(int stuhlFarbe, int zeitFuer90GradDrehung) {
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
 			rechtsDrehung(zeitFuer90GradDrehung);
+			break;
+		case INPUT_REDCOLOR:
+			linksDrehung(zeitFuer90GradDrehung);
+			break;
+		case INPUT_YELLOWCOLOR:
+			break;
 	}
 }
 
