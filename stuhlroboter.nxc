@@ -34,6 +34,7 @@ task main() {
 	startVorgang();
 	//Farbe einlesen
 	//TODO: Add color validity check
+	//TODO: Wait for correct color input???
 	stuhlFarbe = Sensor(IN_1);
 	//2 Sekunden warten
 	Wait(2000);
@@ -69,6 +70,7 @@ void aufTastendruckWarten() {
 	}
 }
 
+//TODO: FINISH HIM
 void sortierVorgang() {
 	//Linienverfolgung-Anfang
 	linienVerfolgung(linienFarbton);
@@ -82,25 +84,28 @@ void sortierVorgang() {
 	DriveToLineEnd(LineColor);
 }
 
-//TODO: tidy up and display error
 void linienVerfolgung(int linienFarbton) {
 	while(true) {
-		if(Sensor(IN_3)  <= linienFarbton) {
-			OnFwd(OUT_AB,POWER);
-		} else {
-			//Links
-			linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
-			//Überprüfung
-			if(Sensor(IN_3) > linienFarbton) {
-				//Rechts
-				rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
-				if(Sensor(IN_3) > linienFarbton) {
-					//Links
-					linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
-					break;
-				}
-			}
+		//Roboter befindet sich auf Linie
+		if(Sensor(IN_3) <= linienFarbton) {
+			OnFwd(OUT_AB, POWER);
+			continue;
 		}
+
+		//Überprüfung, ob sich die Linie links befindet
+		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
+		if(Sensor(IN_3) <= linienFarbton) {
+			continue;
+		}
+
+		//Überprüfung, ob sich die Linie links befindet
+		rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
+		if(Sensor(IN_3) <= linienFarbton) {
+			continue;
+		}
+
+		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
+		break();
 	}
 }
 
