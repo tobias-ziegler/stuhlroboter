@@ -6,7 +6,7 @@ void sensorenInitialisieren();
 void startVorgang();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
-void sortierVorgang();
+void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
@@ -39,7 +39,7 @@ task main() {
 	//2 Sekunden warten
 	Wait(2000);
 
-	sortierVorgang();
+	sortierVorgang(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 }
 
 void sensorenInitialisieren() {
@@ -71,15 +71,19 @@ void aufTastendruckWarten() {
 }
 
 //TODO: FINISH HIM
-void sortierVorgang() {
+void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
 	//Linienverfolgung-Anfang
 	linienVerfolgung(linienFarbton);
+
     //Vorfahren zur Mitte
     Drive(1200);
+
     //Zur Farbe drehen
     zuFarbeDrehen(stuhlFarbe, zeitFuer90GradDrehung);
+
     //Linieverfolgung links/rechts/geradeaus
     linienVerfolgung(linienFarbton);
+	
 	turn(color, timeTurn90);
 	DriveToLineEnd(LineColor);
 }
