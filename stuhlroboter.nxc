@@ -109,7 +109,7 @@ void linienVerfolgung(int linienFarbton) {
 
 		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
 		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
-		break();
+		break;
 	}
 }
 
