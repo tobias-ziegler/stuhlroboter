@@ -12,6 +12,7 @@ void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
+void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 int kalibrierungSW();
 long kalibrierung90();
 
@@ -69,16 +70,17 @@ void aufTastendruckWarten() {
 
 //TODO: FINISH HIM
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
-	//Linienverfolgung-Anfang
-	linienVerfolgung(linienFarbton);
-
-    //Vorfahren zur Mitte
-    geradeAusFahren(1200);
-
     //Zur Farbe fahren
     zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
+	//180° Drehung
+	rechtsDrehung(zeitFuer90GradDrehung * 2);
+
 	//Zurückfahren
+	zuStartpunktFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
+
+	//180° Drehung
+	rechtsDrehung(zeitFuer90GradDrehung * 2);
 }
 
 void linienVerfolgung(int linienFarbton) {
@@ -130,6 +132,9 @@ void geradeAusFahren(int zeitspanne) {
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
 			rechtsDrehung(zeitFuer90GradDrehung);
    			linienVerfolgung(linienFarbton);
 			geradeAusFahren(400);
@@ -137,6 +142,9 @@ void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung)
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_REDCOLOR:
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			geradeAusFahren(400);
@@ -144,6 +152,40 @@ void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung)
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_YELLOWCOLOR:
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
+			linienVerfolgung(linienFarbton);
+			break;
+	}
+}
+
+void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
+	switch(stuhlFarbe) {
+		case INPUT_BLACKCOLOR:
+			linienVerfolgung(linienFarbton);
+			geradeAusFahren(400);
+			rechtsDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
+			linksDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
+			break;
+		case INPUT_REDCOLOR:
+			linienVerfolgung(linienFarbton);
+			geradeAusFahren(400);
+			linksDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
+			rechtsDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
+			break;
+		case INPUT_YELLOWCOLOR:
+			linienVerfolgung(linienFarbton);
+			//Vorfahren zur Mitte
+			geradeAusFahren(1200);
 			linienVerfolgung(linienFarbton);
 			break;
 	}
