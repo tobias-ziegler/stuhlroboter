@@ -16,15 +16,17 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 int kalibrierungSW();
 long kalibrierung90();
 
+//TODO: Remove magic numbers
+//TODO: Check comments
 task main() {
 
 	int zeitFuer90GradDrehung;
-	//geradeAusFahren(100);
 	int linienFarbton;
 	int stuhlFarbe;
 
 	//Kalibrierung
 	zeitFuer90GradDrehung = kalibrierung90();
+	//geradeAusFahren(100);
 	linienFarbton = kalibrierungSW();
 
 	//Start
