@@ -11,17 +11,14 @@ void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
-void zuFarbeDrehen(int stuhlFarbe, int zeitFuer90GradDrehung);
-
-void turn(int color, int timeTurn90);
-
+void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 int kalibrierungSW();
 long kalibrierung90();
 
 task main() {
 
 	int zeitFuer90GradDrehung;
-	//Drive(100);
+	//geradeAusFahren(100);
 	int linienFarbton;
 	int stuhlFarbe;
 
@@ -76,21 +73,17 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 	linienVerfolgung(linienFarbton);
 
     //Vorfahren zur Mitte
-    Drive(1200);
+    geradeAusFahren(1200);
 
-    //Zur Farbe drehen
-    zuFarbeDrehen(stuhlFarbe, zeitFuer90GradDrehung);
+    //Zur Farbe fahren
+    zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
-    //Linieverfolgung links/rechts/geradeaus
-    linienVerfolgung(linienFarbton);
-	
-	turn(color, timeTurn90);
-	DriveToLineEnd(LineColor);
+	//Zurückfahren
 }
 
 void linienVerfolgung(int linienFarbton) {
 	while(true) {
-		//Roboter befindet sich auf Linie
+		//Roboter befindet sich auf der Linie, geradeaus fahren
 		if(Sensor(IN_3) <= linienFarbton) {
 			OnFwd(OUT_AB, POWER);
 			continue;
@@ -102,12 +95,13 @@ void linienVerfolgung(int linienFarbton) {
 			continue;
 		}
 
-		//Überprüfung, ob sich die Linie links befindet
+		//Überprüfung, ob sich die Linie rechts befindet
 		rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
 		if(Sensor(IN_3) <= linienFarbton) {
 			continue;
 		}
 
+		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
 		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
 		break();
 	}
@@ -133,30 +127,26 @@ void geradeAusFahren(int zeitspanne) {
 	Off(OUT_AB);
 }
 
-void zuFarbeDrehen(int stuhlFarbe, int zeitFuer90GradDrehung) {
+void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
 			rechtsDrehung(zeitFuer90GradDrehung);
+   			linienVerfolgung(linienFarbton);
+			geradeAusFahren(400);
+			linksDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_REDCOLOR:
 			linksDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
+			geradeAusFahren(400);
+			rechtsDrehung(zeitFuer90GradDrehung);
+			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_YELLOWCOLOR:
+			linienVerfolgung(linienFarbton);
 			break;
 	}
-}
-
-void turn(int color, int timeTurn90) {
-    switch(color) {
-        case 1: {
-             Drive(400);
-             //Linksdrehung
-             OnFwd(OUT_B,POWER);
-             OnRev(OUT_A,POWER);
-             Wait(timeTurn90);
-             Off(OUT_AB);
-        }
-    }
 }
 
 int kalibrierungSW(void)
