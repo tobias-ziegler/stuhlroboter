@@ -68,19 +68,21 @@ void aufTastendruckWarten() {
 	}
 }
 
-//TODO: FINISH HIM
+//TODO: Stop on contact and display error
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
-    //Zur Farbe fahren
-    zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
+    while(true) {
+		//Zur Farbe fahren
+		zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
-	//180° Drehung
-	rechtsDrehung(zeitFuer90GradDrehung * 2);
+		//180° Drehung
+		rechtsDrehung(zeitFuer90GradDrehung * 2);
 
-	//Zurückfahren
-	zuStartpunktFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
+		//Zurückfahren
+		zuStartpunktFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
-	//180° Drehung
-	rechtsDrehung(zeitFuer90GradDrehung * 2);
+		//180° Drehung
+		rechtsDrehung(zeitFuer90GradDrehung * 2);
+	}
 }
 
 void linienVerfolgung(int linienFarbton) {
