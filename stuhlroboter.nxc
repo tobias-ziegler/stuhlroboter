@@ -20,6 +20,10 @@ long kalibrierung90();
 
 //TODO: Remove magic numbers
 //TODO: Check comments
+//TODO: Add counter
+//TODO: Add display error function
+//TODO: Check formatting
+//TODO: Check functionality
 task main() {
 
 	int zeitFuer90GradDrehung;
@@ -69,7 +73,11 @@ void aufTastendruckWarten() {
 }
 
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
-    while(true) {
+    int stuhlZähler = 0;
+	TextOut(5, LCD_LINE1, "Anzahl einsortierter Stühle:");
+	NumOut(5, LCD_LINE2, stuhlZähler);
+
+	while(true) {
 		int stuhlFarbe = stuhlFarbeHerausfinden();
 
 		//Zur Farbe fahren
@@ -83,6 +91,8 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
+
+		stuhlZähler++;
 	}
 }
 
@@ -102,7 +112,7 @@ int stuhlFarbeHerausfinden() {
 
 		//Fehlermeldung anzeigen
 		ClearScreen();
-		TextOut(5,LCD_LINE1, "Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
+		TextOut(5, LCD_LINE1, "Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
 		Wait(5000);
 		ClearScreen();
 	}
@@ -246,7 +256,7 @@ int kalibrierungSW(void)
 	int iHelligkeitKal=0;
 	ClearScreen();
 	//Kalibrierung nach links
-	TextOut(5,LCD_LINE1, "KALIBRIERUNG LINKS");
+	TextOut(5, LCD_LINE1, "KALIBRIERUNG LINKS");
   	//Motor nach links starten
 	OnFwd(OUT_B, 50);
 	OnRev(OUT_A, 50);
@@ -259,7 +269,7 @@ int kalibrierungSW(void)
 		}
 	}
 	// Kalibrierung nach rechts
-	TextOut(5,LCD_LINE2, "KALIBRIERUNG RECHTS");
+	TextOut(5, LCD_LINE2, "KALIBRIERUNG RECHTS");
 	end_time = CurrentTick() + 1200;
 	OnFwd(OUT_A, 50);
 	OnRev(OUT_B, 50);
@@ -275,11 +285,11 @@ int kalibrierungSW(void)
 	//Durchschnitt ausrechnen und anzeigen
 	iDurchschnitt = (imin+imax)/2;
 	ClearLine(LCD_LINE3);
-	TextOut(4,LCD_LINE3, "SW Linienkante:");
+	TextOut(4, LCD_LINE3, "SW Linienkante:");
 	NumOut(65, LCD_LINE3, iDurchschnitt);
 
 	//Kalibrierung abgeschlossen, Linienkante finden
-	TextOut(4,LCD_LINE3, "KALIBRIERUNG ABGESCHLOSSEN");
+	TextOut(4, LCD_LINE3, "KALIBRIERUNG ABGESCHLOSSEN");
 	while (Sensor(IN_3) > iDurchschnitt) {
 		OnFwd(OUT_B, 50);
 		OnRev(OUT_A, 50);
@@ -293,7 +303,7 @@ long kalibrierung90()
 	//die für eine 90Grad-Drehung benötigt wird
 {
 	ClearScreen();
-	TextOut(5,LCD_LINE1, "KALIBR. LÄUFT");
+	TextOut(5, LCD_LINE1, "KALIBR. LÄUFT");
 	int iHelligkeitkal=0;
 	long t0kal=CurrentTick(), turntime180=0;
 
@@ -305,7 +315,7 @@ long kalibrierung90()
 		iHelligkeitkal=Sensor(IN_3);
 	}while(iHelligkeitkal>=50)
 
-	TextOut(5,LCD_LINE2, "LINIE GEFUNDEN");
+	TextOut(5, LCD_LINE2, "LINIE GEFUNDEN");
 
 
 	//Benötigte Zeit für die 180Grad Drehung berechnen
@@ -318,6 +328,6 @@ long kalibrierung90()
   	do{
 		iHelligkeitkal=Sensor(IN_3);
 	}while(iHelligkeitkal>=50)
-	TextOut(5,LCD_LINE3, "KALIBR. ABGESCHLOSSEN");
+	TextOut(5, LCD_LINE3, "KALIBR. ABGESCHLOSSEN");
 	return turntime180/2;
 }
