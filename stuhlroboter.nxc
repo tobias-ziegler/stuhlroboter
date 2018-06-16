@@ -20,7 +20,6 @@ long kalibrierung90();
 
 //TODO: Remove magic numbers
 //TODO: Check comments
-//TODO: Add counter
 //TODO: Add display error function
 //TODO: Check formatting
 //TODO: Check functionality
@@ -37,10 +36,6 @@ task main() {
 	//Start
 	sensorenInitialisieren();
 	startVorgang();
-
-	//2 Sekunden warten
-	Wait(2000);
-
 	sortierVorgang(linienFarbton, zeitFuer90GradDrehung);
 }
 
@@ -58,6 +53,8 @@ void startVorgang() {
 	ClearScreen();
 	//Ton ausgeben
 	PlaySound(SOUND_DOUBLE_BEEP);
+	//2 Sekunden warten
+	Wait(2000);
 }
 
 void bedienungsanleitungAnzeigen() {
