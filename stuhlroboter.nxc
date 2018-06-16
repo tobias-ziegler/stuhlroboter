@@ -222,9 +222,9 @@ int kalibrierungSW(void)
 	int imax = -1;
 	int iHelligkeitKal=0;
 	ClearScreen();
-	// Kalibrierung nach links
+	//Kalibrierung nach links
 	TextOut(5,LCD_LINE1, "KALIBRIERUNG LINKS");
-  //Motor nach links starten
+  	//Motor nach links starten
 	OnFwd(OUT_B, 50);
 	OnRev(OUT_A, 50);
 	while (CurrentTick()-t0 < 990) {
@@ -275,11 +275,11 @@ long kalibrierung90()
 	long t0kal=CurrentTick(), turntime180=0;
 
 	//drehen bis Linie wieder gefunden ist
-  OnFwd(OUT_A,POWER);
+  	OnFwd(OUT_A,POWER);
 	OnRev(OUT_B,POWER);
 	Wait(300);
-  do{
-	iHelligkeitkal=Sensor(IN_3);
+  	do{
+		iHelligkeitkal=Sensor(IN_3);
 	}while(iHelligkeitkal>=50)
 
 	TextOut(5,LCD_LINE2, "LINIE GEFUNDEN");
@@ -289,11 +289,11 @@ long kalibrierung90()
 	turntime180=CurrentTick()-t0kal;
 
 	//zurückdrehen auf die Linie
-  OnFwd(OUT_B,POWER);
+  	OnFwd(OUT_B,POWER);
 	OnRev(OUT_A,POWER);
 	Wait(300);
-  do{
-	iHelligkeitkal=Sensor(IN_3);
+  	do{
+		iHelligkeitkal=Sensor(IN_3);
 	}while(iHelligkeitkal>=50)
 	TextOut(5,LCD_LINE3, "KALIBR. ABGESCHLOSSEN");
 	return turntime180/2;
