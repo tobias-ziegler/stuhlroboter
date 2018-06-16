@@ -13,6 +13,7 @@ void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
+boolean istObjektImWeg();
 int kalibrierungSW();
 long kalibrierung90();
 
@@ -193,6 +194,10 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 			linienVerfolgung(linienFarbton);
 			break;
 	}
+}
+
+boolean istObjektImWeg() {
+	return SensorUS(IN_2) < 50;
 }
 
 int kalibrierungSW(void)
