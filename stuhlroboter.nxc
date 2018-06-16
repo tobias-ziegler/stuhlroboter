@@ -6,7 +6,8 @@ void sensorenInitialisieren();
 void startVorgang();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
-void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
+void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
+int stuhlFarbeHerausfinden();
 void linienVerfolgung(int linienFarbton);
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
@@ -23,7 +24,6 @@ task main() {
 
 	int zeitFuer90GradDrehung;
 	int linienFarbton;
-	int stuhlFarbe;
 
 	//Kalibrierung
 	zeitFuer90GradDrehung = kalibrierung90();
@@ -33,14 +33,11 @@ task main() {
 	//Start
 	sensorenInitialisieren();
 	startVorgang();
-	//Farbe einlesen
-	//TODO: Add color validity check
-	//TODO: Wait for correct color input???
-	stuhlFarbe = Sensor(IN_1);
+
 	//2 Sekunden warten
 	Wait(2000);
 
-	sortierVorgang(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
+	sortierVorgang(linienFarbton, zeitFuer90GradDrehung);
 }
 
 void sensorenInitialisieren() {
@@ -73,6 +70,8 @@ void aufTastendruckWarten() {
 
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
     while(true) {
+		int stuhlFarbe = stuhlFarbeHerausfinden();
+
 		//Zur Farbe fahren
 		zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
@@ -85,6 +84,30 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
 	}
+}
+
+int stuhlFarbeHerausfinden() {
+	int stuhlFarbe;
+
+	while(true) {
+		stuhlFarbe = Sensor(IN_1);
+
+		if (
+			stuhlFarbe == INPUT_BLACKCOLOR ||
+			stuhlFarbe == INPUT_REDCOLOR ||
+			stuhlFarbe == INPUT_YELLOWCOLOR
+		) {
+			break;
+		}
+
+		//Fehlermeldung anzeigen
+		ClearScreen();
+		TextOut(5,LCD_LINE1, "Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
+		Wait(5000);
+		ClearScreen();
+	}
+
+	return stuhlFarbe;
 }
 
 void linienVerfolgung(int linienFarbton) {
