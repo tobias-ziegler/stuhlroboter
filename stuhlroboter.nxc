@@ -13,7 +13,7 @@ void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
-boolean istObjektImWeg();
+void arbeitUnterbrechenFallsWegBlockiert();
 int kalibrierungSW();
 long kalibrierung90();
 
@@ -71,7 +71,6 @@ void aufTastendruckWarten() {
 	}
 }
 
-//TODO: Stop on contact and display error
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
     while(true) {
 		//Zur Farbe fahren
@@ -92,6 +91,7 @@ void linienVerfolgung(int linienFarbton) {
 	while(true) {
 		//Roboter befindet sich auf der Linie, geradeaus fahren
 		if(Sensor(IN_3) <= linienFarbton) {
+			arbeitUnterbrechenFallsWegBlockiert();
 			OnFwd(OUT_AB, POWER);
 			continue;
 		}
@@ -115,6 +115,8 @@ void linienVerfolgung(int linienFarbton) {
 }
 
 void linksDrehung(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
 	OnFwd(OUT_B,POWER);
 	OnRev(OUT_A,POWER);
 	Wait(zeitspanne);
@@ -122,6 +124,8 @@ void linksDrehung(int zeitspanne) {
 }
 
 void rechtsDrehung(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
 	OnFwd(OUT_A,POWER);
 	OnRev(OUT_B,POWER);
 	Wait(zeitspanne);
@@ -129,6 +133,8 @@ void rechtsDrehung(int zeitspanne) {
 }
 
 void geradeAusFahren(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
 	OnFwd(OUT_AB, POWER);
 	Wait(zeitspanne);
 	Off(OUT_AB);
@@ -196,8 +202,10 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 	}
 }
 
-boolean istObjektImWeg() {
-	return SensorUS(IN_2) < 50;
+void arbeitUnterbrechenFallsWegBlockiert() {
+	while (SensorUS(IN_2) < 50) {
+		;
+	}
 }
 
 int kalibrierungSW(void)
