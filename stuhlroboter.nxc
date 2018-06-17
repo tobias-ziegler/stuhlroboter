@@ -30,7 +30,6 @@ void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
-//TODO: Remove umlauts
 task main() {
 
 	//Variablendefinition
