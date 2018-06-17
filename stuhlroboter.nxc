@@ -15,6 +15,7 @@ void geradeAusFahren(int zeitspanne);
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void arbeitUnterbrechenFallsWegBlockiert();
+void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
@@ -108,10 +109,7 @@ int stuhlFarbeHerausfinden() {
 		}
 
 		//Fehlermeldung anzeigen
-		ClearScreen();
-		TextOut(5, LCD_LINE1, "Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
-		Wait(5000);
-		ClearScreen();
+		fehlerMeldungAnzeigen("Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
 	}
 
 	return stuhlFarbe;
@@ -236,6 +234,18 @@ void arbeitUnterbrechenFallsWegBlockiert() {
 	while (SensorUS(IN_2) < 50) {
 		;
 	}
+}
+
+void fehlerMeldungAnzeigen(string nachricht) {
+	ClearLine(LCD_LINE3);
+	ClearLine(LCD_LINE4);
+
+	TextOut(5, LCD_LINE3, "FEHLER:");
+	TextOut(5, LCD_LINE4, nachricht);
+	Wait(5000);
+
+	ClearLine(LCD_LINE3);
+	ClearLine(LCD_LINE4);
 }
 
 int kalibrierungSW(void)
