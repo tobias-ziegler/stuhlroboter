@@ -7,21 +7,24 @@ void startVorgang();
 void sensorenInitialisieren();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
+
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
 int stuhlFarbeHerausfinden();
+void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
+void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void linienVerfolgung(int linienFarbton);
+
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
-void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
-void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
+
 void arbeitUnterbrechenFallsWegBlockiert();
 void fehlerMeldungAnzeigen(string nachricht);
+
 int kalibrierungSW();
 long kalibrierung90();
 
 //TODO: Check comments
-//TODO: Check formatting
 //TODO: Check functionality
 //TODO: Make sure it compiles
 task main() {
@@ -114,59 +117,6 @@ int stuhlFarbeHerausfinden() {
 	return stuhlFarbe;
 }
 
-void linienVerfolgung(int linienFarbton) {
-	while(true) {
-		//Roboter befindet sich auf der Linie, geradeaus fahren
-		if(Sensor(IN_3) <= linienFarbton) {
-			arbeitUnterbrechenFallsWegBlockiert();
-			OnFwd(OUT_AB, POWER);
-			continue;
-		}
-
-		//Überprüfung, ob sich die Linie links befindet
-		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
-		if(Sensor(IN_3) <= linienFarbton) {
-			continue;
-		}
-
-		//Überprüfung, ob sich die Linie rechts befindet
-		rechtsDrehung(LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT);
-		if(Sensor(IN_3) <= linienFarbton) {
-			continue;
-		}
-
-		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
-		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
-		break;
-	}
-}
-
-void linksDrehung(int zeitspanne) {
-	arbeitUnterbrechenFallsWegBlockiert();
-	
-	OnFwd(OUT_B,POWER);
-	OnRev(OUT_A,POWER);
-	Wait(zeitspanne);
-	Off(OUT_AB);
-}
-
-void rechtsDrehung(int zeitspanne) {
-	arbeitUnterbrechenFallsWegBlockiert();
-	
-	OnFwd(OUT_A,POWER);
-	OnRev(OUT_B,POWER);
-	Wait(zeitspanne);
-	Off(OUT_AB);
-}
-
-void geradeAusFahren(int zeitspanne) {
-	arbeitUnterbrechenFallsWegBlockiert();
-	
-	OnFwd(OUT_AB, POWER);
-	Wait(zeitspanne);
-	Off(OUT_AB);
-}
-
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
@@ -227,6 +177,59 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 			linienVerfolgung(linienFarbton);
 			break;
 	}
+}
+
+void linienVerfolgung(int linienFarbton) {
+	while(true) {
+		//Roboter befindet sich auf der Linie, geradeaus fahren
+		if(Sensor(IN_3) <= linienFarbton) {
+			arbeitUnterbrechenFallsWegBlockiert();
+			OnFwd(OUT_AB, POWER);
+			continue;
+		}
+
+		//Überprüfung, ob sich die Linie links befindet
+		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
+		if(Sensor(IN_3) <= linienFarbton) {
+			continue;
+		}
+
+		//Überprüfung, ob sich die Linie rechts befindet
+		rechtsDrehung(LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT);
+		if(Sensor(IN_3) <= linienFarbton) {
+			continue;
+		}
+
+		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
+		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
+		break;
+	}
+}
+
+void linksDrehung(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
+	OnFwd(OUT_B,POWER);
+	OnRev(OUT_A,POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
+}
+
+void rechtsDrehung(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
+	OnFwd(OUT_A,POWER);
+	OnRev(OUT_B,POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
+}
+
+void geradeAusFahren(int zeitspanne) {
+	arbeitUnterbrechenFallsWegBlockiert();
+	
+	OnFwd(OUT_AB, POWER);
+	Wait(zeitspanne);
+	Off(OUT_AB);
 }
 
 void arbeitUnterbrechenFallsWegBlockiert() {
