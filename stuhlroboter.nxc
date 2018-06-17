@@ -72,6 +72,7 @@ void aufTastendruckWarten() {
 
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
     int stuhlZähler = 0;
+	//Stuhlzähler anzeigen
 	TextOut(5, LCD_LINE1, "Anzahl einsortierter Stühle:");
 	NumOut(5, LCD_LINE2, stuhlZähler);
 
@@ -232,7 +233,7 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 
 void arbeitUnterbrechenFallsWegBlockiert() {
 	while (SensorUS(IN_2) < 50) {
-		;
+		fehlerMeldungAnzeigen("Der Weg ist blockiert. Räumen Sie den Weg frei.");
 	}
 }
 
@@ -242,6 +243,7 @@ void fehlerMeldungAnzeigen(string nachricht) {
 
 	TextOut(5, LCD_LINE3, "FEHLER:");
 	TextOut(5, LCD_LINE4, nachricht);
+	//5 Sekunden warten
 	Wait(5000);
 
 	ClearLine(LCD_LINE3);
