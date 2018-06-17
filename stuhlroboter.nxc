@@ -40,9 +40,9 @@ long kalibrierung90();
 
 task main() {
 
-	//Variablendefinition
-	int linienFarbton;
-	int zeitFuer90GradDrehung;
+	//Variablendefinition & -initialisierung
+	int linienFarbton = 0;
+	int zeitFuer90GradDrehung = 0;
 
 	//Zuweisung der Ergebnisse der Kalibrierung
 	linienFarbton = kalibrierungSW();
