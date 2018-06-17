@@ -40,12 +40,14 @@ long kalibrierung90();
 
 task main() {
 
-	//Variablendefinition & -initialisierung
-	int linienFarbton = 0;
-	int zeitFuer90GradDrehung = 0;
+	//Variablendefinition
+	int linienFarbton;
+	int zeitFuer90GradDrehung;
 
-	//Zuweisung der Ergebnisse der Kalibrierung
+	//Zuweisung des Ergebnisses der Schwarz-Weiss Kalibrierung
 	linienFarbton = kalibrierungSW();
+
+	//Zuweisung des Ergebnisses der 90° Kalibrierung
 	zeitFuer90GradDrehung = kalibrierung90();
 
 	startVorgang();
@@ -91,9 +93,7 @@ void bedienungsanleitungAnzeigen() {
 void aufTastendruckWarten() {
 	//Durchschleifen solange der Knopf nicht gedrückt wurde
 	//Berührungssensor einlesen
-	while(Sensor(IN_4) != 1) {
-		;
-	}
+	while(Sensor(IN_4) != 1) { }
 }
 
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung) {
