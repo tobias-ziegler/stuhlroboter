@@ -1,26 +1,32 @@
+//Konstantendefinition
 #define POWER 30
 #define LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT 120
 #define LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT 240
 #define MINIMALE_DISTANZ_ZU_OBJEKT 50
 
+//Funktionsprototypen des Startvorgangs
 void startVorgang();
 void sensorenInitialisieren();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
 
+//Funktionsprototypen des Sortiervorgangs
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
 int stuhlFarbeHerausfinden();
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void linienVerfolgung(int linienFarbton);
 
+//Helferfunktionen
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
 
+//Fehlerfunktionen
 void arbeitUnterbrechenFallsWegBlockiert();
 void fehlerMeldungAnzeigen(string nachricht);
 
+//Kalibrierungsfunktionen
 int kalibrierungSW();
 long kalibrierung90();
 
@@ -29,10 +35,11 @@ long kalibrierung90();
 //TODO: Make sure it compiles
 task main() {
 
+	//Variablendefinition
 	int zeitFuer90GradDrehung;
 	int linienFarbton;
 
-	//Kalibrierung
+	//Zuweisung der Ergebnisse der Kalibrierung
 	zeitFuer90GradDrehung = kalibrierung90();
 	linienFarbton = kalibrierungSW();
 
@@ -43,43 +50,60 @@ task main() {
 
 void startVorgang() {
 	sensorenInitialisieren();
+
 	bedienungsanleitungAnzeigen();
 	aufTastendruckWarten();
+
 	//Konsole löschen
 	ClearScreen();
+
 	//Ton ausgeben
 	PlaySound(SOUND_DOUBLE_BEEP);
+	
 	//2 Sekunden warten
 	Wait(SEC_2);
 }
 
 void sensorenInitialisieren() {
+	//Farbsensor initialisieren
 	SetSensorColorFull(IN_1);
+
+	//Ultraschallsensor initialisieren
 	SetSensorLowspeed(IN_2);
+
+	//Lichtsensor initialisieren
 	SetSensorLight(IN_3);
+
+	//Berührungssensor initialisieren
 	SetSensorTouch(IN_4);
 }
 
 void bedienungsanleitungAnzeigen() {
+	//Bedienungsanleitung ausgeben
 	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
 }
 
 void aufTastendruckWarten() {
+	//Durchschleifen solange der Knopf nicht gedrückt wurde
+	//Berührungssensor einlesen
 	while(Sensor(IN_4) != 1) {
 		;
 	}
 }
 
 void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
-    int stuhlZähler = 0;
+    
+	//Stuhlzähler initialisieren
+	int stuhlZähler = 0;
+
 	//Stuhlzähler anzeigen
 	TextOut(5, LCD_LINE1, "Anzahl einsortierter Stühle:");
 	NumOut(5, LCD_LINE2, stuhlZähler);
 
 	while(true) {
+		//Stuhlfarbe einlesen
 		int stuhlFarbe = stuhlFarbeHerausfinden();
 
-		//Zur Farbe fahren
 		zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
 		//Stuhl einsortiert, Zähler erhöhen
@@ -88,7 +112,6 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
 
-		//Zurückfahren
 		zuStartpunktFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
 		//180° Drehung
@@ -97,9 +120,12 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 }
 
 int stuhlFarbeHerausfinden() {
+	
+	//Variablendefinition
 	int stuhlFarbe;
 
 	while(true) {
+		//Stuhlfarbe einlesen
 		stuhlFarbe = Sensor(IN_1);
 
 		if (
@@ -107,10 +133,11 @@ int stuhlFarbeHerausfinden() {
 			stuhlFarbe == INPUT_REDCOLOR ||
 			stuhlFarbe == INPUT_YELLOWCOLOR
 		) {
+			//Gültige Stuhlfarbe
 			break;
 		}
 
-		//Fehlermeldung anzeigen
+		//Ungültige Stuhlfarbe
 		fehlerMeldungAnzeigen("Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
 	}
 
@@ -121,29 +148,44 @@ void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung)
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
 			linienVerfolgung(linienFarbton);
+
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+
 			rechtsDrehung(zeitFuer90GradDrehung);
    			linienVerfolgung(linienFarbton);
+			
+			//Über die Ecke hinausfahren
 			geradeAusFahren(MS_400);
+
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			break;
 		case INPUT_REDCOLOR:
 			linienVerfolgung(linienFarbton);
+			
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+			
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
+			//Über die Ecke hinausfahren
 			geradeAusFahren(MS_400);
+
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			break;
 		case INPUT_YELLOWCOLOR:
 			linienVerfolgung(linienFarbton);
+
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+
 			linienVerfolgung(linienFarbton);
+			
 			break;
 	}
 }
@@ -152,56 +194,77 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
 			linienVerfolgung(linienFarbton);
+
+			//Über die Ecke hinausfahren
 			geradeAusFahren(MS_400);
+
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+			
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			break;
 		case INPUT_REDCOLOR:
 			linienVerfolgung(linienFarbton);
+
+			//Über die Ecke hinausfahren
 			geradeAusFahren(MS_400);
+
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
+			
 			break;
 		case INPUT_YELLOWCOLOR:
 			linienVerfolgung(linienFarbton);
+			
 			//Vorfahren zur Mitte
 			geradeAusFahren(SEC_1 + MS_200);
+
 			linienVerfolgung(linienFarbton);
+			
 			break;
 	}
 }
 
 void linienVerfolgung(int linienFarbton) {
 	while(true) {
-		//Roboter befindet sich auf der Linie, geradeaus fahren
+
+		//Farbsensor einlesen
 		if(Sensor(IN_3) <= linienFarbton) {
 			arbeitUnterbrechenFallsWegBlockiert();
+
+			//Roboter befindet sich auf der Linie, geradeaus fahren
 			OnFwd(OUT_AB, POWER);
 			continue;
 		}
 
+		//Roboter befindet sich nicht auf der Linie
+
+		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
 		//Überprüfung, ob sich die Linie links befindet
-		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
 		if(Sensor(IN_3) <= linienFarbton) {
 			continue;
 		}
 
-		//Überprüfung, ob sich die Linie rechts befindet
 		rechtsDrehung(LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT);
+		//Überprüfung, ob sich die Linie rechts befindet
 		if(Sensor(IN_3) <= linienFarbton) {
 			continue;
 		}
 
-		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
+		//Auf Ausgangsposition zurückdrehen, Linienverfolgung abgeschlossen
 		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
+		
 		break;
 	}
 }
@@ -209,6 +272,7 @@ void linienVerfolgung(int linienFarbton) {
 void linksDrehung(int zeitspanne) {
 	arbeitUnterbrechenFallsWegBlockiert();
 	
+	//Linksdrehung
 	OnFwd(OUT_B,POWER);
 	OnRev(OUT_A,POWER);
 	Wait(zeitspanne);
@@ -218,6 +282,7 @@ void linksDrehung(int zeitspanne) {
 void rechtsDrehung(int zeitspanne) {
 	arbeitUnterbrechenFallsWegBlockiert();
 	
+	//Rechtsdrehung
 	OnFwd(OUT_A,POWER);
 	OnRev(OUT_B,POWER);
 	Wait(zeitspanne);
@@ -227,26 +292,35 @@ void rechtsDrehung(int zeitspanne) {
 void geradeAusFahren(int zeitspanne) {
 	arbeitUnterbrechenFallsWegBlockiert();
 	
+	//Geradeaus fahren
 	OnFwd(OUT_AB, POWER);
 	Wait(zeitspanne);
 	Off(OUT_AB);
 }
 
 void arbeitUnterbrechenFallsWegBlockiert() {
+	//Durchschleifen solange sich ein Objekt im Weg befindet
+	//Ultraschallsensor einlesen
 	while (SensorUS(IN_2) < MINIMALE_DISTANZ_ZU_OBJEKT) {
 		fehlerMeldungAnzeigen("Der Weg ist blockiert. Räumen Sie den Weg frei.");
 	}
 }
 
 void fehlerMeldungAnzeigen(string nachricht) {
+	//LCD_LINE3 & LCD_LINE4 werden für die Fehlerausgabe benutzt
+	
+	//Zeilen 3 & 4 löschen
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
 
+	//Fehlernachricht ausgeben
 	TextOut(5, LCD_LINE3, "FEHLER:");
 	TextOut(5, LCD_LINE4, nachricht);
+
 	//5 Sekunden warten
 	Wait(SEC_5);
 
+	//Zeilen 3 & 4 löschen
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
 }
