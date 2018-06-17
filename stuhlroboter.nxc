@@ -1,3 +1,11 @@
+/*
+* Credits: RoboSol 8
+* 	Paul Winkler
+* 	Manuel Wischnat
+* 	Oskar Wortmann
+* 	Tobias Ziegler
+*/
+
 //Konstantendefinition
 #define POWER 30
 #define LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT 120
