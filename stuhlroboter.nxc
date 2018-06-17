@@ -1,6 +1,7 @@
 #define POWER 30
-#define LINIENVERFOLGUNG_DREHUNG_LINKS 120
-#define LINIENVERFOLGUNG_DREHUNG_RECHTS 240
+#define LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT 120
+#define LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT 240
+#define MINIMALE_DISTANZ_ZU_OBJEKT 50
 
 void startVorgang();
 void sensorenInitialisieren();
@@ -19,11 +20,9 @@ void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
-//TODO: Remove magic numbers
 //TODO: Check comments
 //TODO: Check formatting
 //TODO: Check functionality
-//TODO: Check counter position
 //TODO: Make sure it compiles
 task main() {
 
@@ -32,7 +31,6 @@ task main() {
 
 	//Kalibrierung
 	zeitFuer90GradDrehung = kalibrierung90();
-	//geradeAusFahren(100);
 	linienFarbton = kalibrierungSW();
 
 	startVorgang();
@@ -49,7 +47,7 @@ void startVorgang() {
 	//Ton ausgeben
 	PlaySound(SOUND_DOUBLE_BEEP);
 	//2 Sekunden warten
-	Wait(2000);
+	Wait(SEC_2);
 }
 
 void sensorenInitialisieren() {
@@ -126,19 +124,19 @@ void linienVerfolgung(int linienFarbton) {
 		}
 
 		//Überprüfung, ob sich die Linie links befindet
-		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
+		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
 		if(Sensor(IN_3) <= linienFarbton) {
 			continue;
 		}
 
 		//Überprüfung, ob sich die Linie rechts befindet
-		rechtsDrehung(LINIENVERFOLGUNG_DREHUNG_RECHTS);
+		rechtsDrehung(LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT);
 		if(Sensor(IN_3) <= linienFarbton) {
 			continue;
 		}
 
 		//Auf Startpunkt zurückdrehen, Linienverfolgung abgeschlossen
-		linksDrehung(LINIENVERFOLGUNG_DREHUNG_LINKS);
+		linksDrehung(LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT);
 		break;
 	}
 }
@@ -174,27 +172,27 @@ void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung)
 		case INPUT_BLACKCOLOR:
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			rechtsDrehung(zeitFuer90GradDrehung);
    			linienVerfolgung(linienFarbton);
-			geradeAusFahren(400);
+			geradeAusFahren(MS_400);
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_REDCOLOR:
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
-			geradeAusFahren(400);
+			geradeAusFahren(MS_400);
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_YELLOWCOLOR:
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			linienVerfolgung(linienFarbton);
 			break;
 	}
@@ -204,35 +202,35 @@ void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDre
 	switch(stuhlFarbe) {
 		case INPUT_BLACKCOLOR:
 			linienVerfolgung(linienFarbton);
-			geradeAusFahren(400);
+			geradeAusFahren(MS_400);
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_REDCOLOR:
 			linienVerfolgung(linienFarbton);
-			geradeAusFahren(400);
+			geradeAusFahren(MS_400);
 			linksDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			rechtsDrehung(zeitFuer90GradDrehung);
 			linienVerfolgung(linienFarbton);
 			break;
 		case INPUT_YELLOWCOLOR:
 			linienVerfolgung(linienFarbton);
 			//Vorfahren zur Mitte
-			geradeAusFahren(1200);
+			geradeAusFahren(SEC_1 + MS_200);
 			linienVerfolgung(linienFarbton);
 			break;
 	}
 }
 
 void arbeitUnterbrechenFallsWegBlockiert() {
-	while (SensorUS(IN_2) < 50) {
+	while (SensorUS(IN_2) < MINIMALE_DISTANZ_ZU_OBJEKT) {
 		fehlerMeldungAnzeigen("Der Weg ist blockiert. Räumen Sie den Weg frei.");
 	}
 }
@@ -244,7 +242,7 @@ void fehlerMeldungAnzeigen(string nachricht) {
 	TextOut(5, LCD_LINE3, "FEHLER:");
 	TextOut(5, LCD_LINE4, nachricht);
 	//5 Sekunden warten
-	Wait(5000);
+	Wait(SEC_5);
 
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
