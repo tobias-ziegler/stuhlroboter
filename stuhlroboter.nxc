@@ -64,10 +64,8 @@ void bedienungsanleitungAnzeigen() {
 }
 
 void aufTastendruckWarten() {
-	while(true) {
-		if(Sensor(IN_4) == 1) {
-			break;
-		}
+	while(Sensor(IN_4) != 1) {
+		;
 	}
 }
 
