@@ -21,7 +21,6 @@ long kalibrierung90();
 
 //TODO: Remove magic numbers
 //TODO: Check comments
-//TODO: Add display error function
 //TODO: Check formatting
 //TODO: Check functionality
 //TODO: Check counter position
@@ -82,6 +81,9 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 		//Zur Farbe fahren
 		zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
+		//Stuhl einsortiert, Zähler erhöhen
+		stuhlZähler++;
+
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
 
@@ -90,8 +92,6 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
-
-		stuhlZähler++;
 	}
 }
 
