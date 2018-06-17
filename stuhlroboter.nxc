@@ -30,18 +30,16 @@ void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
-//TODO: Check comments
-//TODO: Check functionality
-//TODO: Make sure it compiles
+//TODO: Remove umlauts
 task main() {
 
 	//Variablendefinition
-	int zeitFuer90GradDrehung;
 	int linienFarbton;
+	int zeitFuer90GradDrehung;
 
 	//Zuweisung der Ergebnisse der Kalibrierung
-	zeitFuer90GradDrehung = kalibrierung90();
 	linienFarbton = kalibrierungSW();
+	zeitFuer90GradDrehung = kalibrierung90();
 
 	startVorgang();
 
@@ -91,14 +89,14 @@ void aufTastendruckWarten() {
 	}
 }
 
-void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung) {
+void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung) {
     
 	//Stuhlzähler initialisieren
-	int stuhlZähler = 0;
+	int stuhlZaehler = 0;
 
 	//Stuhlzähler anzeigen
 	TextOut(5, LCD_LINE1, "Anzahl einsortierter Stühle:");
-	NumOut(5, LCD_LINE2, stuhlZähler);
+	NumOut(5, LCD_LINE2, stuhlZaehler);
 
 	while(true) {
 		//Stuhlfarbe einlesen
@@ -107,7 +105,7 @@ void sortierVorgang(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung
 		zuFarbeFahren(linienFarbton, stuhlFarbe, zeitFuer90GradDrehung);
 
 		//Stuhl einsortiert, Zähler erhöhen
-		stuhlZähler++;
+		stuhlZaehler++;
 
 		//180° Drehung
 		rechtsDrehung(zeitFuer90GradDrehung * 2);
@@ -308,7 +306,7 @@ void arbeitUnterbrechenFallsWegBlockiert() {
 
 void fehlerMeldungAnzeigen(string nachricht) {
 	//LCD_LINE3 & LCD_LINE4 werden für die Fehlerausgabe benutzt
-	
+
 	//Zeilen 3 & 4 löschen
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
