@@ -2,8 +2,8 @@
 #define LINIENVERFOLGUNG_DREHUNG_LINKS 120
 #define LINIENVERFOLGUNG_DREHUNG_RECHTS 240
 
-void sensorenInitialisieren();
 void startVorgang();
+void sensorenInitialisieren();
 void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
@@ -23,6 +23,8 @@ long kalibrierung90();
 //TODO: Add display error function
 //TODO: Check formatting
 //TODO: Check functionality
+//TODO: Check counter position
+//TODO: Make sure it compiles
 task main() {
 
 	int zeitFuer90GradDrehung;
@@ -33,20 +35,13 @@ task main() {
 	//geradeAusFahren(100);
 	linienFarbton = kalibrierungSW();
 
-	//Start
-	sensorenInitialisieren();
 	startVorgang();
+
 	sortierVorgang(linienFarbton, zeitFuer90GradDrehung);
 }
 
-void sensorenInitialisieren() {
-	SetSensorColorFull(IN_1);
-	SetSensorLowspeed(IN_2);
-	SetSensorLight(IN_3);
-	SetSensorTouch(IN_4);
-}
-
 void startVorgang() {
+	sensorenInitialisieren();
 	bedienungsanleitungAnzeigen();
 	aufTastendruckWarten();
 	//Konsole löschen
@@ -55,6 +50,13 @@ void startVorgang() {
 	PlaySound(SOUND_DOUBLE_BEEP);
 	//2 Sekunden warten
 	Wait(2000);
+}
+
+void sensorenInitialisieren() {
+	SetSensorColorFull(IN_1);
+	SetSensorLowspeed(IN_2);
+	SetSensorLight(IN_3);
+	SetSensorTouch(IN_4);
 }
 
 void bedienungsanleitungAnzeigen() {
