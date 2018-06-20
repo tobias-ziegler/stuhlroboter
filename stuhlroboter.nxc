@@ -15,7 +15,6 @@
 //Funktionsprototypen des Startvorgangs
 void startVorgang();
 void sensorenInitialisieren();
-void bedienungsanleitungAnzeigen();
 void aufTastendruckWarten();
 
 //Funktionsprototypen des Sortiervorgangs
@@ -58,10 +57,15 @@ task main() {
 void startVorgang() {
 	sensorenInitialisieren();
 
-	bedienungsanleitungAnzeigen();
+	//Bildschirm löschen
+	ClearScreen();
+
+	//Bedienungsanleitung ausgeben
+	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
+
 	aufTastendruckWarten();
 
-	//Konsole löschen
+	//Bildschirm löschen
 	ClearScreen();
 
 	//Ton ausgeben
@@ -83,11 +87,6 @@ void sensorenInitialisieren() {
 
 	//Berührungssensor initialisieren
 	SetSensorTouch(IN_4);
-}
-
-void bedienungsanleitungAnzeigen() {
-	//Bedienungsanleitung ausgeben
-	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
 }
 
 void aufTastendruckWarten() {
