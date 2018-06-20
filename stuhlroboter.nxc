@@ -7,7 +7,7 @@
 */
 
 //Konstanteninitialisierung
-const int POWER = 30;
+const int POWER = 40;
 const int LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT = 120;
 const int LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT = 240;
 const int MINIMALE_DISTANZ_ZU_OBJEKT = 5;
