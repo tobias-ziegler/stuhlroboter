@@ -308,13 +308,15 @@ void fehlerMeldungAnzeigen(string nachricht) {
 	//Fehlernachricht ausgeben
 	TextOut(5, LCD_LINE3, "FEHLER:");
 	TextOut(5, LCD_LINE4, nachricht);
+	TextOut(5, LCD_LINE5, "Taste druecken");
 
-	//5 Sekunden warten
-	Wait(SEC_5);
+	//Auf Tastendruck warten
+	while(Sensor(IN_4) != 1) { }
 
 	//Zeilen 3 & 4 löschen
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
+	ClearLine(LCD_LINE5);
 }
 
 int kalibrierungSW(void)
