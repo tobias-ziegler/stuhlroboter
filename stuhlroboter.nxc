@@ -28,7 +28,6 @@ void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
-//TODO: TextOut prüfen
 task main() {
 
 	//Variablendefinition
