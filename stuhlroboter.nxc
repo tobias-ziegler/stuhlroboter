@@ -7,10 +7,10 @@
 */
 
 //Konstantendefinition
-#define POWER 30
-#define LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT 120
-#define LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT 240
-#define MINIMALE_DISTANZ_ZU_OBJEKT 50
+const int POWER = 30;
+const int LINIENVERFOLGUNG_LINKSDREHUNG_ZEIT = 120;
+const int LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT = 240;
+const int MINIMALE_DISTANZ_ZU_OBJEKT = 50;
 
 //Funktionsprototypen
 void sensorenInitialisieren();
@@ -28,6 +28,8 @@ void fehlerMeldungAnzeigen(string nachricht);
 int kalibrierungSW();
 long kalibrierung90();
 
+//TODO: TextOut prüfen
+//TODO: #define -> const
 task main() {
 
 	//Variablendefinition
