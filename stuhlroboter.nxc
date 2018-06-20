@@ -304,6 +304,7 @@ void fehlerMeldungAnzeigen(string nachricht) {
 	//Zeilen 3 & 4 löschen
 	ClearLine(LCD_LINE3);
 	ClearLine(LCD_LINE4);
+	ClearLine(LCD_LINE5);
 
 	//Fehlernachricht ausgeben
 	TextOut(5, LCD_LINE3, "FEHLER:");
