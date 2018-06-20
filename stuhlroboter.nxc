@@ -67,7 +67,8 @@ void startVorgang() {
 	ClearScreen();
 
 	//Bedienungsanleitung ausgeben
-	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
+	TextOut(5, LCD_LINE1, "Knopf druecken");
+	TextOut(5, LCD_LINE2, "um zu starten!");
 
 	//Durchschleifen solange der Knopf nicht gedrückt wurde
 	//Berührungssensor einlesen
@@ -89,7 +90,7 @@ void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung) {
 	int stuhlZaehler = 0;
 
 	//Stuhlzähler anzeigen
-	TextOut(5, LCD_LINE1, "Anzahl einsortierter Stühle:");
+	TextOut(5, LCD_LINE1, "Anzahl sortierter Stuehle:");
 	NumOut(5, LCD_LINE2, stuhlZaehler);
 
 	while(true) {
@@ -130,7 +131,7 @@ int stuhlFarbeHerausfinden() {
 		}
 
 		//Ungültige Stuhlfarbe
-		fehlerMeldungAnzeigen("Farbe nicht erkannt, bitte halten Sie den Stuhl erneut unter den Sensor.");
+		fehlerMeldungAnzeigen("Farbe nicht erkannt!");
 	}
 
 	return stuhlFarbe;
@@ -294,7 +295,7 @@ void arbeitUnterbrechenFallsWegBlockiert() {
 	//Durchschleifen solange sich ein Objekt im Weg befindet
 	//Ultraschallsensor einlesen
 	while (SensorUS(IN_2) < MINIMALE_DISTANZ_ZU_OBJEKT) {
-		fehlerMeldungAnzeigen("Der Weg ist blockiert. Räumen Sie den Weg frei.");
+		fehlerMeldungAnzeigen("Der Weg ist blockiert!");
 	}
 }
 
