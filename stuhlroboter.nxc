@@ -15,7 +15,6 @@
 //Funktionsprototypen des Startvorgangs
 void startVorgang();
 void sensorenInitialisieren();
-void aufTastendruckWarten();
 
 //Funktionsprototypen des Sortiervorgangs
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
@@ -63,7 +62,9 @@ void startVorgang() {
 	//Bedienungsanleitung ausgeben
 	TextOut(5, LCD_LINE1, "Drücken Sie den Knopf, um den Sortiervorgang zu starten.");
 
-	aufTastendruckWarten();
+	//Durchschleifen solange der Knopf nicht gedrückt wurde
+	//Berührungssensor einlesen
+	while(Sensor(IN_4) != 1) { }
 
 	//Bildschirm löschen
 	ClearScreen();
@@ -87,12 +88,6 @@ void sensorenInitialisieren() {
 
 	//Berührungssensor initialisieren
 	SetSensorTouch(IN_4);
-}
-
-void aufTastendruckWarten() {
-	//Durchschleifen solange der Knopf nicht gedrückt wurde
-	//Berührungssensor einlesen
-	while(Sensor(IN_4) != 1) { }
 }
 
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung) {
