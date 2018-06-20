@@ -13,8 +13,8 @@
 #define MINIMALE_DISTANZ_ZU_OBJEKT 50
 
 //Funktionsprototypen des Startvorgangs
-void startVorgang();
 void sensorenInitialisieren();
+void startVorgang();
 
 //Funktionsprototypen des Sortiervorgangs
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
@@ -42,6 +42,8 @@ task main() {
 	int linienFarbton;
 	int zeitFuer90GradDrehung;
 
+	sensorenInitialisieren();
+
 	//Zuweisung des Ergebnisses der Schwarz-Weiss Kalibrierung
 	linienFarbton = kalibrierungSW();
 
@@ -53,9 +55,21 @@ task main() {
 	sortierVorgang(linienFarbton, zeitFuer90GradDrehung);
 }
 
-void startVorgang() {
-	sensorenInitialisieren();
+void sensorenInitialisieren() {
+	//Farbsensor initialisieren
+	SetSensorColorFull(IN_1);
 
+	//Ultraschallsensor initialisieren
+	SetSensorLowspeed(IN_2);
+
+	//Lichtsensor initialisieren
+	SetSensorLight(IN_3);
+
+	//Berührungssensor initialisieren
+	SetSensorTouch(IN_4);
+}
+
+void startVorgang() {
 	//Bildschirm löschen
 	ClearScreen();
 
@@ -74,20 +88,6 @@ void startVorgang() {
 	
 	//2 Sekunden warten
 	Wait(SEC_2);
-}
-
-void sensorenInitialisieren() {
-	//Farbsensor initialisieren
-	SetSensorColorFull(IN_1);
-
-	//Ultraschallsensor initialisieren
-	SetSensorLowspeed(IN_2);
-
-	//Lichtsensor initialisieren
-	SetSensorLight(IN_3);
-
-	//Berührungssensor initialisieren
-	SetSensorTouch(IN_4);
 }
 
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung) {
