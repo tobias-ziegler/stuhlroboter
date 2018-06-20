@@ -12,27 +12,19 @@
 #define LINIENVERFOLGUNG_RECHTSDREHUNG_ZEIT 240
 #define MINIMALE_DISTANZ_ZU_OBJEKT 50
 
-//Funktionsprototypen des Startvorgangs
+//Funktionsprototypen
 void sensorenInitialisieren();
 void startVorgang();
-
-//Funktionsprototypen des Sortiervorgangs
 void sortierVorgang(int linienFarbton, int zeitFuer90GradDrehung);
 int stuhlFarbeHerausfinden();
 void zuFarbeFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void zuStartpunktFahren(int linienFarbton, int stuhlFarbe, int zeitFuer90GradDrehung);
 void linienVerfolgung(int linienFarbton);
-
-//Helferfunktionen
 void linksDrehung(int zeitspanne);
 void rechtsDrehung(int zeitspanne);
 void geradeAusFahren(int zeitspanne);
-
-//Fehlerfunktionen
 void arbeitUnterbrechenFallsWegBlockiert();
 void fehlerMeldungAnzeigen(string nachricht);
-
-//Kalibrierungsfunktionen
 int kalibrierungSW();
 long kalibrierung90();
 
